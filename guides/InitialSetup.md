@@ -39,15 +39,7 @@ In the home directory:
 
 ## Fix the code for Python 3
 
-Edit the floating point division symbol to the integer division symbol (/ -> //) in lines 219, 220, 254, 255.
-
-Example (line 219):
-
-`out_shape[2] = out_shape[2] / poolsize[0]`
-
-to
-
-`out_shape[2] = out_shape[2] // poolsize[0]`
+Replace the Deconvnet-keras.py file of the recently cloned repository with the one provided along with this guide (/FashionVisualization/guides/Deconvnet-keras.py)
 
 ## Try the code
 

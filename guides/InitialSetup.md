@@ -12,6 +12,8 @@ Run the installer (yes to everything)
 
 `bash Anaconda3-2018.12-Linux-x86_64.sh`
 
+Start a new session (close the current terminal).
+
 ## Install Theano
 
 `pip install theano`

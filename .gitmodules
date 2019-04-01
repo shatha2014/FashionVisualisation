@@ -1,0 +1,3 @@
+[submodule "DeconvNets/Deconvnet-keras"]
+	path = DeconvNets/Deconvnet-keras
+	url = https://github.com/jalused/Deconvnet-keras.git

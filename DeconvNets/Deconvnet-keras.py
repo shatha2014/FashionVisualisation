@@ -27,6 +27,7 @@ from keras.models import Model, Sequential
 from keras.applications import vgg16, imagenet_utils
 import keras.backend as K
 from keras.models import load_model
+import os
 
 
 class DConvolution2D(object):
@@ -529,7 +530,22 @@ def main():
     deconv = deconv[:, :, ::-1]
     uint8_deconv = (deconv * 255).astype(np.uint8)
     img = Image.fromarray(uint8_deconv, 'RGB')
-    img.save('results/{}_{}_{}.png'.format(layer_name, feature_to_visualize, visualize_mode))
+
+
+    if model_path == 'vgg16':
+        try:
+            os.mkdir('results_vgg16_FashionMNIST')
+        except FileExistsError:
+            pass
+        img.save('results_vgg16_FashionMNIST/{}_{}_{}.png'.format(layer_name, feature_to_visualize, visualize_mode))
+
+    else:
+        model_name = os.path.basename(model_path)
+        try:
+            os.mkdir('results_{}_FashionMNIST'.format(model_name))
+        except FileExistsError:
+            pass
+        img.save('results_{}_FashionMNIST/{}_{}_{}.png'.format(model_name, layer_name, feature_to_visualize, visualize_mode))
 
 if "__main__" == __name__:
     main()

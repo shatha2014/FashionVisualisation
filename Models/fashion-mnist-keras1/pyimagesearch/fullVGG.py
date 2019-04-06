@@ -22,64 +22,64 @@ class fullVGGNet:
 		model.add(Convolution2D(64, 3, 3, border_mode="same",
 						 input_shape=inputShape))
 		model.add(Activation("relu"))
-		model.add(BatchNormalization(axis=chanDim))
+		#model.add(BatchNormalization(axis=chanDim))
 		model.add(Convolution2D(64, 3, 3, border_mode="same"))
 		model.add(Activation("relu"))
-		model.add(BatchNormalization(axis=chanDim))
+		#model.add(BatchNormalization(axis=chanDim))
 		model.add(MaxPooling2D(pool_size=(2, 2)))
-		model.add(Dropout(0.25))
+		#model.add(Dropout(0.25))
 
 		# Second block
 		model.add(Convolution2D(128, 3, 3, border_mode="same",
 						 input_shape=inputShape))
 		model.add(Activation("relu"))
-		model.add(BatchNormalization(axis=chanDim))
+		#model.add(BatchNormalization(axis=chanDim))
 		model.add(Convolution2D(128, 3, 3, border_mode="same"))
 		model.add(Activation("relu"))
-		model.add(BatchNormalization(axis=chanDim))
+		#model.add(BatchNormalization(axis=chanDim))
 		model.add(MaxPooling2D(pool_size=(2, 2)))
-		model.add(Dropout(0.25))
+		#model.add(Dropout(0.25))
 
 		# Third block
 		model.add(Convolution2D(256, 3, 3,border_mode="same",
 						 input_shape=inputShape))
 		model.add(Activation("relu"))
-		model.add(BatchNormalization(axis=chanDim))
+		#model.add(BatchNormalization(axis=chanDim))
 		model.add(Convolution2D(256, 3, 3, border_mode="same"))
 		model.add(Activation("relu"))
-		model.add(BatchNormalization(axis=chanDim))
+		#model.add(BatchNormalization(axis=chanDim))
 		model.add(Convolution2D(256, 3, 3, border_mode="same"))
 		model.add(Activation("relu"))
-		model.add(BatchNormalization(axis=chanDim))
+		#model.add(BatchNormalization(axis=chanDim))
 		model.add(MaxPooling2D(pool_size=(2, 2)))
-		model.add(Dropout(0.25))
+		#model.add(Dropout(0.25))
 
 		# 4th block
 		model.add(Convolution2D(512, 3, 3, border_mode="same",
 						 input_shape=inputShape))
 		model.add(Activation("relu"))
-		model.add(BatchNormalization(axis=chanDim))
+		#model.add(BatchNormalization(axis=chanDim))
 		model.add(Convolution2D(512, 3, 3, border_mode="same"))
 		model.add(Activation("relu"))
-		model.add(BatchNormalization(axis=chanDim))
+		#model.add(BatchNormalization(axis=chanDim))
 		model.add(Convolution2D(512, 3, 3, border_mode="same"))
 		model.add(Activation("relu"))
 		model.add(BatchNormalization(axis=chanDim))
 		model.add(MaxPooling2D(pool_size=(2, 2)))
-		model.add(Dropout(0.25))
+		#model.add(Dropout(0.25))
 
 
 		# FC
 		model.add(Flatten())
 		model.add(Dense(4096))
 		model.add(Activation("relu"))
-		model.add(BatchNormalization())
-		model.add(Dropout(0.5))
+		#model.add(BatchNormalization())
+		#model.add(Dropout(0.5))
 
 		model.add(Dense(4096))
 		model.add(Activation("relu"))
-		model.add(BatchNormalization())
-		model.add(Dropout(0.5))
+		#model.add(BatchNormalization())
+		#model.add(Dropout(0.5))
 
 		# softmax classifier
 		model.add(Dense(classes))

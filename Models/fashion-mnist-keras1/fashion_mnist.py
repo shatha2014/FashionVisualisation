@@ -6,7 +6,7 @@ import matplotlib
 matplotlib.use("Agg")
 
 # import the necessary packages
-from pyimagesearch.minivggnet import miniVGGNet
+from pyimagesearch.fullVGG import fullVGGNet
 from sklearn.metrics import classification_report
 from keras.optimizers import SGD
 from keras.utils import np_utils
@@ -53,7 +53,7 @@ labelNames = ["top", "trouser", "pullover", "dress", "coat",
 # initialize the optimizer and model
 print("[INFO] compiling model...")
 opt = SGD(lr=INIT_LR, momentum=0.9, decay=INIT_LR / NUM_EPOCHS)
-model = miniVGGNet.build(width=28, height=28, depth=1, classes=10)
+model = fullVGGNet.build(width=28, height=28, depth=1, classes=10)
 model.compile(loss="categorical_crossentropy", optimizer=opt,
 	metrics=["accuracy"])
 

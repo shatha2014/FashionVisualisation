@@ -65,7 +65,7 @@ H = model.fit(trainX, trainY,
 
 # make predictions on the test set
 preds = model.predict(testX)
-model.save('fashion_mnist_model_keras1.h5')
+model.save('fmnist_fullVGG.h5')
 
 # show a nicely formatted classification report
 print("[INFO] evaluating network...")

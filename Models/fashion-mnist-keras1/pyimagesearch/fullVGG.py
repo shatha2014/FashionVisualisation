@@ -64,7 +64,7 @@ class fullVGGNet:
 		#model.add(BatchNormalization(axis=chanDim))
 		model.add(Convolution2D(512, 3, 3, border_mode="same"))
 		model.add(Activation("relu"))
-		model.add(BatchNormalization(axis=chanDim))
+		#model.add(BatchNormalization(axis=chanDim))
 		model.add(MaxPooling2D(pool_size=(2, 2)))
 		#model.add(Dropout(0.25))
 

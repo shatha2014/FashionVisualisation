@@ -8,82 +8,24 @@ from keras.layers.core import Flatten
 from keras.layers.core import Dropout
 from keras.layers.core import Dense
 from keras import backend as K
+from keras.layers import Input
+from keras.models import Model
+from keras import applications
 
 class fullVGGNet:
 	@staticmethod
 	def build(width, height, depth, classes):
-		# initialize the model along with the input shape to be
-		# inputShape with theano backend
-		model = Sequential()
-		inputShape = (depth, height, width)
-		chanDim = 1
+		img_input = Input(shape=(depth, width, height))
 
-		# First block
-		model.add(Convolution2D(64, 3, 3, border_mode="same",
-						 input_shape=inputShape))
-		model.add(Activation("relu"))
-		#model.add(BatchNormalization(axis=chanDim))
-		model.add(Convolution2D(64, 3, 3, border_mode="same"))
-		model.add(Activation("relu"))
-		#model.add(BatchNormalization(axis=chanDim))
-		model.add(MaxPooling2D(pool_size=(2, 2)))
-		#model.add(Dropout(0.25))
+		model_vgg = applications.VGG16(include_top=False, weights=None, input_tensor=img_input)
+		model_vgg.summary()
+		#Classification block
+		output_vgg16_conv = model_vgg(img_input)
+		x = Flatten(name='flatten')(output_vgg16_conv)
+		x = Dense(4096, activation='relu', name='fc1')(x)
+		x = Dense(4096, activation='relu', name='fc2')(x)
+		x = Dense(classes, activation='softmax', name='predictions')(x)
 
-		# Second block
-		model.add(Convolution2D(128, 3, 3, border_mode="same",
-						 input_shape=inputShape))
-		model.add(Activation("relu"))
-		#model.add(BatchNormalization(axis=chanDim))
-		model.add(Convolution2D(128, 3, 3, border_mode="same"))
-		model.add(Activation("relu"))
-		#model.add(BatchNormalization(axis=chanDim))
-		model.add(MaxPooling2D(pool_size=(2, 2)))
-		#model.add(Dropout(0.25))
+		model = Model(input=img_input, output=x)
 
-		# Third block
-		model.add(Convolution2D(256, 3, 3,border_mode="same",
-						 input_shape=inputShape))
-		model.add(Activation("relu"))
-		#model.add(BatchNormalization(axis=chanDim))
-		model.add(Convolution2D(256, 3, 3, border_mode="same"))
-		model.add(Activation("relu"))
-		#model.add(BatchNormalization(axis=chanDim))
-		model.add(Convolution2D(256, 3, 3, border_mode="same"))
-		model.add(Activation("relu"))
-		#model.add(BatchNormalization(axis=chanDim))
-		model.add(MaxPooling2D(pool_size=(2, 2)))
-		#model.add(Dropout(0.25))
-
-		# 4th block
-		model.add(Convolution2D(512, 3, 3, border_mode="same",
-						 input_shape=inputShape))
-		model.add(Activation("relu"))
-		#model.add(BatchNormalization(axis=chanDim))
-		model.add(Convolution2D(512, 3, 3, border_mode="same"))
-		model.add(Activation("relu"))
-		#model.add(BatchNormalization(axis=chanDim))
-		model.add(Convolution2D(512, 3, 3, border_mode="same"))
-		model.add(Activation("relu"))
-		#model.add(BatchNormalization(axis=chanDim))
-		model.add(MaxPooling2D(pool_size=(2, 2)))
-		#model.add(Dropout(0.25))
-
-
-		# FC
-		model.add(Flatten())
-		model.add(Dense(4096))
-		model.add(Activation("relu"))
-		#model.add(BatchNormalization())
-		#model.add(Dropout(0.5))
-
-		model.add(Dense(4096))
-		model.add(Activation("relu"))
-		#model.add(BatchNormalization())
-		#model.add(Dropout(0.5))
-
-		# softmax classifier
-		model.add(Dense(classes))
-		model.add(Activation("softmax"))
-
-		# return the constructed network architecture
 		return model

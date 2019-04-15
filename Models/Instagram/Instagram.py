@@ -44,12 +44,12 @@ def train_model (path1, path2):
         img_list=os.listdir(data_path_list[listcounter])
         label = labelNames[listcounter]
         for item in img_list:
-	    item_path = os.path.join(data_path_list[listcounter] + item)
+            item_path = os.path.join(data_path_list[listcounter] + item)
             im = cv2.imread(item_path)
-	    input_img=cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
-	    input_img_resize=cv2.resize(input_img,(224,224))
-	    img_data_list.append(im)
-	    labels_list.append(label)
+            #img =cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+            #im_resize=cv2.resize(im,(224,224))
+            img_data_list.append(im)
+            labels_list.append(label)
         listcounter+=1
 
 

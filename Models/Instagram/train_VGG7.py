@@ -13,7 +13,7 @@ img_width, img_height = 224, 224
 # and batch size
 NUM_EPOCHS = 25
 INIT_LR = 1e-2
-BS = 8
+BS = 32
 num_images = 3815
 num_val_images = 400
 

@@ -427,7 +427,7 @@ def visualize(model, data, layer_name, feature_to_visualize, visualize_mode):
             deconv_layers.append(
                     DActivation(model.layers[i]))
         elif isinstance(model.layers[i], Activation):
-            deconv_layers.append(DActivation(model.alyers[i]))
+            deconv_layers.append(DActivation(model.layers[i]))
         elif isinstance(model.layers[i], Flatten):
             deconv_layers.append(DFlatten(model.layers[i]))
         elif isinstance(model.layers[i], InputLayer):

@@ -24,7 +24,7 @@ from keras.layers.convolutional import (
         MaxPooling2D)
 from keras.activations import *
 from keras.models import Model, Sequential
-from keras.applications import vgg16, imagenet_utils
+#from keras.applications import vgg16, imagenet_utils
 import keras.backend as K
 from keras.models import load_model
 import os
@@ -427,7 +427,7 @@ def visualize(model, data, layer_name, feature_to_visualize, visualize_mode):
             deconv_layers.append(
                     DActivation(model.layers[i]))
         elif isinstance(model.layers[i], Activation):
-            deconv_layers.append(DActivation(model.alyers[i]))
+            deconv_layers.append(DActivation(model.layers[i]))
         elif isinstance(model.layers[i], Flatten):
             deconv_layers.append(DFlatten(model.layers[i]))
         elif isinstance(model.layers[i], InputLayer):
@@ -528,7 +528,7 @@ def main():
     deconv = deconv - deconv.min()
     deconv *= 1.0 / (deconv.max() + 1e-8)
     deconv = deconv[:, :, ::-1]
-    uint8_deconv = (deconv * 255).astype(np.uint8)
+    uint8_deconv = (deconv).astype(np.uint8)
     img = Image.fromarray(uint8_deconv, 'RGB')
 
 

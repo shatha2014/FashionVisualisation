@@ -14,7 +14,7 @@ img_width, img_height = 224, 224
 NUM_EPOCHS = 25
 INIT_LR = 1e-2
 BS = 32
-num_images = 3815
+num_images = 4000
 num_val_images = 400
 
 model = VGG7_model.build(width=img_width, height=img_height, depth=3, classes=2)
@@ -26,10 +26,10 @@ model.compile(loss='categorical_crossentropy',
 
 train_datagen = image.ImageDataGenerator(rescale=1./255)
 
-train_gen = train_datagen.flow_from_directory('Instagram_dataset/train',
+train_gen = train_datagen.flow_from_directory('Instagram_dataset_noNoise/Train',
                                               target_size = (img_width, img_height),
                                               batch_size = BS)
-val_gen = train_datagen.flow_from_directory('Instagram_dataset/Validation',
+val_gen = train_datagen.flow_from_directory('Instagram_dataset_noNoise/Validation',
                                             target_size = (img_width, img_height),
                                             batch_size = BS)
 
@@ -40,4 +40,4 @@ model.fit_generator(train_gen,
                     nb_val_samples = num_val_images,
                     nb_epoch=NUM_EPOCHS)
 
-model.save('VGG7.h5')
+model.save('Instagram_VGG7_NoNoise.h5')

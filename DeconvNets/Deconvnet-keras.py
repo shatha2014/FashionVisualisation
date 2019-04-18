@@ -24,7 +24,7 @@ from keras.layers.convolutional import (
         MaxPooling2D)
 from keras.activations import *
 from keras.models import Model, Sequential
-#from keras.applications import vgg16, imagenet_utils
+from keras.applications import vgg16, imagenet_utils
 import keras.backend as K
 from keras.models import load_model
 import os

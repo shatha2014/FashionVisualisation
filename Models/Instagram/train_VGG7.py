@@ -3,6 +3,7 @@ import numpy as np
 import os
 from keras.preprocessing import image
 from VGG7 import VGG7_model
+from fullVGG import fullVGGNet
 from keras.optimizers import SGD
 from keras import backend as K
 K.set_image_dim_ordering('th')
@@ -17,7 +18,7 @@ BS = 32
 num_images = 4000
 num_val_images = 400
 
-model = VGG7_model.build(width=img_width, height=img_height, depth=3, classes=2)
+model = fullVGGNet.build(width=img_width, height=img_height, depth=3, classes=2)
 opt = SGD(lr=INIT_LR, momentum=0.9, decay=INIT_LR / NUM_EPOCHS)
 model.compile(loss='categorical_crossentropy',
               optimizer=opt,

@@ -102,7 +102,7 @@ class DConvolution2D(object):
         '''
         self.down_data= self.down_func([data, learning_phase])
         return self.down_data
-    
+
 
 class DDense(object):
     '''
@@ -163,6 +163,7 @@ class DDense(object):
         # data = data - self.bias
         self.down_data = self.down_func([data, learning_phase])
         return self.down_data
+
 
 class DPooling(object):
     '''

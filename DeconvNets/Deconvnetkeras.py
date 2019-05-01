@@ -18,7 +18,8 @@ from keras.layers import (
         InputLayer,
         Flatten,
         Activation,
-        Dense)
+        Dense,
+        Dropout)
 from keras.layers.convolutional import (
         Convolution2D,
         MaxPooling2D)
@@ -431,6 +432,8 @@ def visualize(model, data, layer_name, feature_to_visualize, visualize_mode):
         elif isinstance(model.layers[i], Flatten):
             deconv_layers.append(DFlatten(model.layers[i]))
         elif isinstance(model.layers[i], InputLayer):
+            deconv_layers.append(DInput(model.layers[i]))
+        elif isinstance(model.layers[i], Dropout):
             deconv_layers.append(DInput(model.layers[i]))
         else:
             print('Cannot handle this type of layer')

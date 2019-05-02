@@ -33,64 +33,105 @@ from utils.mnist_reader import load_mnist
 def analysis(model_path, layer_name, class_ind, list_images):
     model = load_model(model_path)
     num_filters = model.get_layer(name=layer_name).get_config()['nb_filter']
-    csv_path = '../../DeconvNets/results_minivgg_FashionMNIST/class_{}/feat_inf.csv'.format(class_ind)
-    testX0 = load_img(class_ind)
+    csv_path = '../../DeconvNets/results_minivgg_FashionMNIST/class_{}/feat_inf3.csv'.format(class_ind)
+    testX0 = load_img(list_images, class_ind)
 
-    for i in list_images:
-        img_array = testX0[i]
-        feature_influence = [i]
+    for i, img_array in enumerate(testX0):
+        feature_influence = [list_images[i]]
         img_array = img_array[np.newaxis, :]
         class_prob = model.predict(img_array)[0][class_ind]
 
         for j in range(num_filters):
-            feature = visualize(model=model, data=img_array, layer_name=layer_name, feature_to_visualize=j, visualize_mode='all')
-            img_without_feature = img_array - feature
+            deconv = visualize(model=model, data=img_array, layer_name=layer_name, feature_to_visualize=j, visualize_mode='all')
+
+            deconv = deconv - deconv.min()
+            deconv *= 1.0 / (deconv.max() + 1e-8)
+
+            img_without_feature = img_array - deconv
+
+            img_without_feature = img_without_feature - img_without_feature.min()
+            img_without_feature *= 1.0 / (img_without_feature.max() + 1e-8)
+
             class_prob_wo_feat = model.predict(img_without_feature)[0][class_ind]
 
             difference = class_prob - class_prob_wo_feat
+
+
             feature_influence.append(difference.item())
 
         if i == 0:
+            try:
+                os.mkdir('../../DeconvNets/results_minivgg_FashionMNIST/class_{}'.format(class_ind))
+            except FileExistsError:
+                pass
             csv_file = open(csv_path, 'at')
+
             filewriter = csv.writer(csv_file, delimiter=',')
+            header = [x for x in range(65)]
+
+            filewriter.writerow(header)
             filewriter.writerow(feature_influence)
         else:
             filewriter.writerow(feature_influence)
+        print('image {} done'.format(i))
 
-def load_img(class_ind):
+def load_img(images, class_ind):
     testX, testY = load_mnist(os.path.dirname(os.path.abspath(__file__)) + '/data/fashion', kind='t10k')
     testX = testX.reshape((testX.shape[0], 1, 28, 28))
     testX = testX.astype("float32") / 255.0
     test_mask = np.isin(testY, [class_ind])
-    testX0 = testX[test_mask]
-    #testX0 = testX0[0]
-    #testX0 = testX0[np.newaxis, :]
+    testX = testX[test_mask]
 
-    return testX0
+    img = []
+    for image in images:
+        img.append(testX[image])
+    return img
 
 def save_deconv_img(image, image_ind, class_ind, filter, model, layer_name):
-    deconv = visualize(model=model, data=image, layer_name=layer_name, feature_to_visualize=i,
+    img_array = image[np.newaxis, :]
+    deconv = visualize(model=model, data=img_array, layer_name=layer_name, feature_to_visualize=filter,
                         visualize_mode='all')
     deconv = deconv - deconv.min()
     deconv *= 1.0 / (deconv.max() + 1e-8)
     deconv = np.multiply(deconv, 255)
     uint8_deconv = (deconv).astype(np.uint8)
     feature = Image.fromarray(uint8_deconv, 'L')
-    #img = Image.fromarray(image, 'RGB')
+
+    img_array = np.multiply(img_array, 255)
+    uint8_img_array = img_array.astype(np.uint8)
+    img = Image.fromarray(uint8_img_array[0][0], 'L')
+
     try:
-        os.makedirs('DeconvNets/results_minivgg_FashionMNIST/class_{}/img_{}/'.format(class_ind, image_ind))
+        os.makedirs('../../DeconvNets/results_minivgg_FashionMNIST/class_{}/img_{}/'.format(class_ind, image_ind))
     except FileExistsError:
         pass
-    feature.save('DeconvNets/results_minivgg_FashionMNIST/class_{}/img_{}/{}_{}.png'.format(class_ind, image_ind, layer_name, filter))
-    #img.save('../DeconvNets/results_minivgg_FashionMNIST/class_{}/img_{}/img.png'.format(class_ind, image_ind, layer_name, filter))
 
-#model = load_model('/home/isak/Programming/github projects/FashionVisualisation/Models/fashion-mnist-keras1/fashion_mnist_model_miniVGG_without_Normalisation.h5')
-#img=load_img(0)
-#for i in range(20):
-#    save_deconv_img(img, 0, 0, i, model, 'convolution2d_4')
+    feature.save('../../DeconvNets/results_minivgg_FashionMNIST/class_{}/img_{}/{}_{}.png'.format(class_ind, image_ind, layer_name, filter))
+
+    exist = os.path.isfile('../../DeconvNets/results_minivgg_FashionMNIST/class_{}/img_{}/img.png'.format(class_ind, image_ind, layer_name, filter))
+    if not exist:
+        img.save('../../DeconvNets/results_minivgg_FashionMNIST/class_{}/img_{}/img.png'.format(class_ind, image_ind, layer_name, filter))
+
+
+def save_images(img_index, filter_index, class_index):
+    model = load_model(os.path.dirname(os.path.abspath(__file__)) + '/FM_miniVGG.h5')
+    img = load_img(img_index, class_index)
+    for i, image in enumerate(img):
+        for filter in filter_index:
+            save_deconv_img(image, img_index[i], class_index, filter, model, 'convolution2d_4')
+
+#for C in [2,4,6]:
+#    print(C)
+#    if C == 2:
+#        save_images(img_index = [0, 1, 2, 3, 4], filter_index=[27, 9, 8, 61, 40, 38, 11, 63, 2, 17], class_index=C)
+#    elif C == 4:
+#        save_images(img_index = [0, 1, 2, 3, 4], filter_index=[48, 36, 58, 5, 12, 22, 33, 28, 55, 51], class_index=C)
+#    else:
+#        save_images(img_index = [0, 1, 2, 3, 4], filter_index=[35, 55, 59, 16, 34, 44, 18, 52, 38, 4], class_index=C)
+
 
 
 lis = [x for x in range(100)]
-
-analysis(os.path.dirname(os.path.abspath(__file__)) + '/FM_miniVGG.h5', layer_name='convolution2d_4', class_ind=0, list_images=lis)
+for C in [1, 3, 5, 7, 8, 9]:
+    analysis(os.path.dirname(os.path.abspath(__file__)) + '/FM_miniVGG.h5', layer_name='convolution2d_4', class_ind=C, list_images=lis)
 
